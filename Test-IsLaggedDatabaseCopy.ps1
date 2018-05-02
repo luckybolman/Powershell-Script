@@ -14,8 +14,11 @@ Function Test-IsLaggedDatabaseCopy
     The mailbox server that hosts the database copy to be tested.
 
     .EXAMPLE
-    Test-IsLaggedDatabaseCopy -MailboxServer mbx1 -DatabaseName db1
+    Tests if db1 on mbx1 is a lagged mailbox database copy
 
+    Test-IsLaggedDatabaseCopy -MailboxServer mbx1 -DatabaseName db1
+    False
+    
     .INPUTS
     None.  Test-IsLaggedDatabaseCopy does not accept objects from the pipeline.
 
