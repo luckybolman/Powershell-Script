@@ -40,6 +40,10 @@ Function Get-MailboxToMoveBySize
         [String[]]$Filter
     )
 
+    if (-not (Get-Command -Name Get-Mailbox -ErrorAction 'SilentlyContinue')) {
+        throw 'Exchange cmdlets not available.'
+    }
+
     $mailboxStats = Get-MailboxStatistics -Database $Database -ErrorAction 'SilentlyContinue' | 
         Select-Object DisplayName, @{Name="SizeMB";Expression={[math]::round( [int64]$_.TotalItemSize.ToString().TrimEnd(' bytes)').Split('(')[1] / 1MB)}} |
         Sort-Object -Property SizeMB -descending

@@ -28,6 +28,10 @@ Function Get-DisabledMailboxInGal
     [CmdletBinding()]
     param ()
 
+    if (-not (Get-Command Get-Mailbox -ErrorAction 'SilentlyContinue')) {
+        throw 'The Exchange cmdlets are not available.'
+    }
+
     $FilterBlock = {
         (HiddenFromAddressListsEnabled -eq $false) -and
         (ExchangeUserAccountControl -eq 'AccountDisabled') -and

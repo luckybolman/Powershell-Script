@@ -25,6 +25,10 @@ Function Get-DuplicateAlias
     [CmdletBinding()]
     param( )
 
+    if (-not (Get-Command -Name Get-Mailbox -ErrorAction 'SilentlyContinue')) {
+        throw 'The Exchange cmdlets are not available.'
+    }
+    
     $AliasSeen = @{}
     $return = @()
 

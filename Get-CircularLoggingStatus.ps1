@@ -41,10 +41,16 @@ Function Get-CircularLoggingStatus
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true
         )]
-        [ValidateScript({Get-MailboxDatabase $PSItem})]
         [String[]]$DatabaseName
 
     )
+
+    BEGIN {
+
+        if (-not (Get-Command Get-Mailbox -ErrorAction 'SilentlyContinue')) {
+            throw 'Exchange cmdlets are not available.'
+        }
+    }
 
     PROCESS {
 
