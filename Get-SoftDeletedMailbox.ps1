@@ -30,10 +30,16 @@ Function Get-SoftDeletedMailbox
             ValueFromPipelineByPropertyName = $true,
             HelpMessage = 'One or more Exchange mailbox database names'
         )]
-        [ValidateScript({$PSItem | Get-MailboxDatabase})]
         [Alias('Database', 'Name')]
         [String[]]$DatabaseName
     )
+
+    BEGIN {
+
+        if (-not (Get-Command -Name Get-Mailbox -ErrorAction 'SilentlyContinue')) {
+            throw 'Exchange cmdlets are not available.'
+        }
+    }
 
     PROCESS {
 

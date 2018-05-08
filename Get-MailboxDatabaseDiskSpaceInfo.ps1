@@ -39,6 +39,10 @@ Function Get-MailboxDatabaseDiskSpaceInfo {
     )
     BEGIN {
 
+        if (-not (Get-Command -Name Get-Mailbox -ErrorAction 'SilentlyContinue')) {
+            throw 'Exchange cmdlets are not available.'
+        }
+
         $defaultDisplaySet = 'Name','EdbSize','WhiteSpace'
         $defaultDisplayPropertySet = New-Object System.Management.Automation.PSPropertySet('DefaultDisplayPropertySet',[string[]]$defaultDisplaySet)
         $PSStandardMembers = [System.Management.Automation.PSMemberInfo[]]@($defaultDisplayPropertySet)

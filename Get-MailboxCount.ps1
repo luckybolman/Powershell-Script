@@ -35,10 +35,16 @@ Function Get-MailboxCount
             ValueFromPipeline,
             ValueFromPipelineByPropertyName
         )]
-        [ValidateScript({$_ | Get-MailboxDatabase})]
         [Alias('Name')]
         [String[]]$DatabaseName
     )
+
+    BEGIN {
+
+        if (-not (Get-Command -Name Get-Mailbox -ErrorAction 'SilentlyContinue')) {
+            throw 'Exchange cmdlets are not available.'
+        }
+    }
 
     PROCESS {
 

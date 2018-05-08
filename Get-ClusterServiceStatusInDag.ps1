@@ -26,6 +26,10 @@ Function Get-ClusterServiceStatusInDag
     [CmdletBinding()]
     param ()
 
+    if (-not (Get-Command Get-Mailbox -ErrorAction 'SilentlyContinue')) {
+        throw 'Exchange cmdlets not available.'
+    }
+
     foreach ($dag in (Get-DatabaseAvailabilityGroup)) {
         
         foreach ($server in ((Get-DatabaseAvailabilityGroup).Servers)) {

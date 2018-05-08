@@ -24,6 +24,10 @@ Function Get-EmptyDistributionGroup
     [CmdletBinding()]
     param ()
     
+    if (-not (Get-Command -Name Get-Mailbox -ErrorAction 'SilentlyContinue')) {
+        throw 'Exchange cmdlets are not available.'
+    }
+    
     $distGroupParams = @{ResultSize = 'Unlimited'; ErrorAction = 'Stop'}
     foreach ($distGroup in (Get-DistributionGroup @distGroupParams)) {
 
