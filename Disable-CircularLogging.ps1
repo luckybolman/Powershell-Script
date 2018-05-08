@@ -27,10 +27,14 @@ Function Disable-CircularLogging
             ValueFromPipeline = $true,
             HelpMessage = 'One or more mailbox databases.'
         )]
-        [ValidateScript({Get-MailboxDatabase $_})]
         [String[]]$DatabaseName
     )
-    BEGIN { }
+    BEGIN { 
+
+        if (-Not (Get-Command Get-Mailbox -ErrorAction 'SilentlyContinue')) {
+            throw 'Exchange cmdlets are not avaialble.'
+        }
+    }
 
     PROCESS {
         Write-Verbose -Message 'Looping DatabaseName'
