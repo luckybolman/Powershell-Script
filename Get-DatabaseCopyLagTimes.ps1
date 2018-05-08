@@ -47,8 +47,11 @@ Function Get-DatabaseCopyLagTimes
     )
     BEGIN {
 
-        $GetMailboxDatabaseParams = @{Status = $true; ErrorAction = 'SilentlyContinue'}
+        if (-not (Get-Command Get-Mailbox -ErrorAction 'SilentlyContinue')) {
+            throw 'Exchange cmdlets are not available.'
+        }
 
+        $GetMailboxDatabaseParams = @{Status = $true; ErrorAction = 'SilentlyContinue'}
     }
 
     PROCESS {
@@ -68,7 +71,7 @@ Function Get-DatabaseCopyLagTimes
                     AP = $ap
                     ReplayLagTimes = $ReplayLagTimes
                     TruncationLagTimes = $TruncationLagTimes
-                    ActivationBlocked = Test-IsActivationBlocked -Database $Database -MailboxServer $MailboxServer 
+                    ActivationBlocked = (Get-MailboxDatabaseCopyStatus -Identity $DatabaseName\$MailboxServer).ActivationSuspended -eq $true
                 }
 
             } else { write-warning -message 'No databases were found' }
