@@ -102,26 +102,15 @@ Function Get-Exchange2010ServiceHealth
         foreach ($Computer in $ComputerName) {
             
             if (Test-Connection -Count 2 -ComputerName $Computer -Quiet) {
-                # loop though each Exchange server role string for the current computer
 
+                # Gets a list of services for the current computer using WMI.
                 $query = Get-WmiObject -ComputerName $Computer @wmiQueryParams
 
-                foreach ($roleString in ((Get-ExchangeServer -Identity $Computer).ServerRole )) {
-                    
-                    # Create a collection of roles running on the Exchange server from the role string
-                    if ($roleString -like "*,*") { $roles = $roleString -split ',' -replace ' ','' } else { $roles = $roleString }
+                # Create a collection of roles running on the current Exchange server.
+                $roleString = (Get-ExchangeServer -Identity $Computer).ServerRole -split ',' -replace ' ',''
 
-        #           # loop through the roles collection
-                    foreach ($role in $roles) {
-
-                        ########
-                      # The role is contained in the ExchangeServices hashtable
-
-
-                    #    if ($ExchangeServices.$role) {
-                            
-                            # Return a list of all services  on the currnet Exchange server using the win32_service cliass
-                #  # ###   # $query = Get-WmiObject -ComputerName $Computer @wmiQueryParams
+                    # loop through the roles collection
+                    foreach ($role in $roleString) {
 
                             # Loop though each service in the $ExchangeServices hash table 
                             foreach ($service in ($ExchangeServices.Item($role))) {
@@ -149,7 +138,7 @@ Function Get-Exchange2010ServiceHealth
                             }
                     #    } else { write-warning 'Failed to look up role: $role' }
                     }
-                }
+                #}
             } else { write-warning -message "Exchange Server, $Computer, does not appear to be active and will be skipped." }
         }
     }
