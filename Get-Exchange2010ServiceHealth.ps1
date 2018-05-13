@@ -61,32 +61,6 @@ Function Get-Exchange2010ServiceHealth
             'unifiedMessaging' = @('MSExchangeServiceHost','MSExchangeADTopology','MSExchangeFDS','MSSpeechService','MSExchangeUM')
         }
 
-        # Setup a hash table that contains the Exchange roles as keys and a hash table as values of services required by the roles as keys and null values
-        $clientAccessServices = @{
-            'MSExchangeADTopology' = $null; 'MSExchangeAB' = $null; 'MSExchangeFDS' = $null; 'MSExchangeFBA' = $null; 'MSExchangeServiceHost' = $null
-            'MSExchangeMailboxReplication' = $null; 'MSExchangeProtectionServiceHost' = $null; 'MSExchangeRPC' = $null; 
-        }
-        $mailboxService = @{
-            'MSExchangeServiceHost' = $null; 'ExchangeADTopology' = $null; 'MSExchangeIS' = $null; 'MSExchangeMailSubmission' = $null; 'MSExchangeMailboxAssistant' = $null;
-            'MSExchangeRepl' = $null; 'MSExchangeSearch' = $null; 'MSExchangeSA' = $null; 'MSExchangeThrottling' = $null
-        }
-        $edgeTransportServices = @{
-            'ADAM_MSExchange' = $null; 'MSExchangeEdgeCredential' = $null; 'MSExchangeTransport' = $null; 'MSExchangeServiceHost' = $null
-        }
-        $hubTransportServices = @{ 
-            'MSExchangeServiceHost' = $null; 'MSExchangeADTopology' = $null; 'MSExchangeProtectedServiceHost' = $null; 'SMExchangeTransport' = $null
-        }
-        $unifiedMessagingServices = @{ 
-            'MSExchangeServiceHost' = $null; 'MSExchangeADTopology' = $null; 'MSExchangeFDS' = $null; 'MSSpeechService' = $null; 'MSExchangeUM' = $null 
-        }
-        $ExchangeServicesNew = @{
-            'clientAccess' = $clientAccessServices
-            'edgeTransport' = $mailboxService
-            'hubTransport' = $edgeTransportServices
-            'mailbox' = $mailboxService
-            'unifiedMessaging' = $unifiedMessagingServices
-        }
-
         # If an Exchange server was not specified populate ComputerName with all Exchange servers in the organization.
         if (-not ($PSBoundParameters['ComputerName'])) {
             $ComputerName = (Get-ExchangeServer -ErrorAction 'Stop' -ErrorVariable 'errGetExchangeServer').Name
