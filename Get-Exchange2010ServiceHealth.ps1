@@ -44,7 +44,7 @@ Function Get-Exchange2010ServiceHealth
     BEGIN {
 
         # If the Exchange cmdles are not available throw and message and exist.
-        if (-not (Get-Command -Name Get-Mailbox)) {Throw 'Exchange cmdlets are not avaialble.'}
+        if (-not (Get-Command -Name Get-Mailbox -ErrorAction 'SilentlyContinue')) {Throw 'Exchange cmdlets are not avaialble.'}
 
         # Setup a hash table that contains the Exchange roles as keys and the services required by those roles as values. -legacy
         $ExchangeServices = @{
@@ -57,7 +57,7 @@ Function Get-Exchange2010ServiceHealth
 
             'mailbox' = @('MSExchangeServiceHost','ExchangeADTopology','MSExchangeIS','MSExchangeMailSubmission','MSExchangeMailboxAssistant'
             'MSExchangeRepl','MSExchangeSearch','MSExchangeSA','MSExchangeThrottling')
-##########
+
             'unifiedMessaging' = @('MSExchangeServiceHost','MSExchangeADTopology','MSExchangeFDS','MSSpeechService','MSExchangeUM')
         }
 
@@ -87,7 +87,6 @@ Function Get-Exchange2010ServiceHealth
             'unifiedMessaging' = $unifiedMessagingServices
         }
 
-
         # If an Exchange server was not specified populate ComputerName with all Exchange servers in the organization.
         if (-not ($PSBoundParameters['ComputerName'])) {
             $ComputerName = (Get-ExchangeServer -ErrorAction 'Stop' -ErrorVariable 'errGetExchangeServer').Name
@@ -95,7 +94,6 @@ Function Get-Exchange2010ServiceHealth
 
         # Splatting, used by the Get-WmiObject cammed later to return all services on a given Exchange server
         $wmiQueryParams = @{ErrorAction = 'Stop'; Class = 'win32_service'}
-
     }
     PROCESS {
 
@@ -109,36 +107,30 @@ Function Get-Exchange2010ServiceHealth
                 # Create a collection of roles running on the current Exchange server.
                 $roleString = (Get-ExchangeServer -Identity $Computer).ServerRole -split ',' -replace ' ',''
 
-                    # loop through the roles collection
-                    foreach ($role in $roleString) {
+                # loop through the roles collection
+                foreach ($role in $roleString) {
 
-                            # Loop though each service in the $ExchangeServices hash table 
-                            foreach ($service in ($ExchangeServices.Item($role))) {
-                                
-                                # Loop though each serive returned by wmi
-                                foreach ($wmiService in $query) {
+                    # Loop though each service in the $ExchangeServices hash table 
+                    foreach ($service in ($ExchangeServices.Item($role))) {
+                        
+                        # Loop though each serive returned by wmi
+                        foreach ($wmiService in $query) {
 
-                                    # The service from the hash table is the same as the current service from wmi
-                                    if ($service -eq $wmiService.name) {
+                            # The service from the hash table is the same as the current service from wmi
+                            if ($service -eq $wmiService.name) {
 
-                                        # if need some code somewhere that sayes if the mailbox server is in a dag
-                                        # then add the cluster service to the list as well
-                                        # this check need to occure in the correct place to work right.
-
-                                        # Create a PSCustomObject that will be return
-                                        [PSCustomObject]@{
-                                            ComputerName = $Computer
-                                            Role = $role
-                                            Service = $service
-                                            Status = $wmiService.Status
-                                            State = $wmiService.State
-                                        }
-                                    }
+                                # Create a PSCustomObject that will be return
+                                [PSCustomObject]@{
+                                    ComputerName = $Computer
+                                    Role = $role
+                                    Service = $service
+                                    Status = $wmiService.Status
+                                    State = $wmiService.State
                                 }
                             }
-                    #    } else { write-warning 'Failed to look up role: $role' }
+                        }
                     }
-                #}
+                }
             } else { write-warning -message "Exchange Server, $Computer, does not appear to be active and will be skipped." }
         }
     }
