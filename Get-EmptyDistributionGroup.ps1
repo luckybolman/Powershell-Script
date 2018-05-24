@@ -24,6 +24,8 @@ Function Get-EmptyDistributionGroup
     [CmdletBinding()]
     param ()
     
+    Set-StrictMode -Version 2.0
+    
     if (-not (Get-Command -Name Get-Mailbox -ErrorAction 'SilentlyContinue')) {
         throw 'Exchange cmdlets are not available.'
     }

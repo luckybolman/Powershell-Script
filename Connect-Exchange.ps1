@@ -54,6 +54,8 @@ Function Connect-Exchange
         [ValidateNotNullOrEmpty()]
         [String]$ConnectionUri = "http://$($ExchangeServer)/Powershell"
     )
+    Set-StrictMode -Version 2.0
+    
     try {
         $sessionParams = @{
             ConfigurationName = 'Microsoft.Exchange'

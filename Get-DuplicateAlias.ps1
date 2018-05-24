@@ -25,6 +25,8 @@ Function Get-DuplicateAlias
     [CmdletBinding()]
     param( )
 
+    Set-StrictMode -Version 2.0
+    
     if (-not (Get-Command -Name Get-Mailbox -ErrorAction 'SilentlyContinue')) {
         throw 'The Exchange cmdlets are not available.'
     }

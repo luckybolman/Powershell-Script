@@ -40,6 +40,8 @@ Function Get-MailboxToMoveBySize
         [String[]]$Filter
     )
 
+    Set-StrictMode -Version 2.0
+    
     if (-not (Get-Command -Name Get-Mailbox -ErrorAction 'SilentlyContinue')) {
         throw 'Exchange cmdlets not available.'
     }

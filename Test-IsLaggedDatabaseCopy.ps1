@@ -40,7 +40,8 @@ Function Test-IsLaggedDatabaseCopy
         [ValidateNotNullOrEmpty()]
         [String]$MailboxServer
     )
-
+    Set-StrictMode -Version 2.0
+    
     $GetMailboxDatabaseParams = @{Status = $true; Identity = $DatabaseName}
 
     try {

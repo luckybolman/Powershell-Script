@@ -41,7 +41,8 @@ Function Test-IsActivationBlocked
         [ValidateNotNullOrEmpty()]
         [String]$MailboxServer
     )
-
+    Set-StrictMode -Version 2.0
+    
     If ( (Get-MailboxDatabaseCopyStatus -Identity $DatabaseName\$MailboxServer).ActivationSuspended -eq $true ) {$true} Else {$false}
 
 } # Test-IsActivationBlocked
