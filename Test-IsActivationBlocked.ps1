@@ -43,6 +43,10 @@ Function Test-IsActivationBlocked
     )
     Set-StrictMode -Version 2.0
     
+    if (-not (Get-Command -Name Get-Mailbox -ErrorAction 'SilentlyContinue')) {
+        throw 'Exchange cmdlets are not available.'
+    }
+    
     If ( (Get-MailboxDatabaseCopyStatus -Identity $DatabaseName\$MailboxServer).ActivationSuspended -eq $true ) {$true} Else {$false}
 
 } # Test-IsActivationBlocked
