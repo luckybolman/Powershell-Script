@@ -43,6 +43,8 @@ Function Get-Exchange2010ServiceHealth
 
     BEGIN {
 
+        Set-StrictMode -Version 2.0
+        
         # If the Exchange cmdles are not available throw and message and exist.
         if (-not (Get-Command -Name Get-Mailbox -ErrorAction 'SilentlyContinue')) {Throw 'Exchange cmdlets are not avaialble.'}
 

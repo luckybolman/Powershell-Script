@@ -28,6 +28,8 @@ Function Get-DisabledMailboxInGal
     [CmdletBinding()]
     param ()
 
+    Set-StrictMode -Version 2.0
+    
     if (-not (Get-Command Get-Mailbox -ErrorAction 'SilentlyContinue')) {
         throw 'The Exchange cmdlets are not available.'
     }

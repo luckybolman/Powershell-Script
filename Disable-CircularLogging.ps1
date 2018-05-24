@@ -29,7 +29,9 @@ Function Disable-CircularLogging
         )]
         [String[]]$DatabaseName
     )
-    BEGIN { 
+    BEGIN {
+        
+        Set-StrictMode -Version 2.0
 
         if (-Not (Get-Command Get-Mailbox -ErrorAction 'SilentlyContinue')) {
             throw 'Exchange cmdlets are not avaialble.'

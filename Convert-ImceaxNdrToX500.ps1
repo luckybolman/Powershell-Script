@@ -26,6 +26,8 @@ Function Convert-ImceaxNdrToX500 {
         [ValidatePattern('IMCEAEX-*')]
         [String]$IMCEAX
     )
+    Set-StrictMode -Version 2.0
+    
     $x500 = $IMCEAX -replace '_','/' -replace '\+20',' ' -replace '\+28','(' `
         -replace '\+29', ')' -replace 'IMCEAEX-','' -replace '@.*','' -replace '\+2E','.' `
         -replace '\+40','@' 
